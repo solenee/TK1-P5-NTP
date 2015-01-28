@@ -81,7 +81,6 @@ class ClientSlave extends Thread {
 		String dateString = d.readLine();
 		System.out.println(dateString);
 		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-		//Date dateResponse = format.parse(dateString);
 		String[] parts = dateString.split("\\s");
 		System.out.println(parts.toString());
 		Date dateResponse = format.parse(parts[1]);
