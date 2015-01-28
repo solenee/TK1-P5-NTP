@@ -1,4 +1,4 @@
-package ntp.timeclient;
+package ntptimeclient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,15 +34,15 @@ class ClientSlave extends Thread {
 	}
 
 	public double measureOffset(Timestamp t1, Timestamp t2, Timestamp t3, Timestamp t4) {
-		// TODO
-		return 0;
+		//-oi =-1⁄2(Ti-2 -Ti-3 +Ti-1 -Ti)
+		return -0.5*(t2.getTime()-t1.getTime()+t3.getTime()-t4.getTime());
 	}
-	
+
 	public double measureDelay(Timestamp t1, Timestamp t2, Timestamp t3, Timestamp t4) {
-		// TODO
-		return 0;
+		//di = t + t’ = Ti-2 - Ti-3 + Ti - Ti-1
+		return t2.getTime() - t1.getTime() + t4.getTime() - t3.getTime();
 	}
-	
+
 	public void run() {
 		System.out.println("[CLIENT] Start computing...");
 		double offsets[] = new double[NMAX_MEASURES];
@@ -57,11 +57,12 @@ class ClientSlave extends Thread {
 				if (delays[i] < delays[imin]) {
 					imin = i;
 				}
-				System.out.println("[CLIENT] Measure "+i+" : offset = "+offsets[i]+" / delay = "+delays[i]);
+				System.out.println("[CLIENT] Measure "+i+" : offset = "+offsets[i]+"ms / delay = "+delays[i]+"ms");
 				sleep(INTERTIME);
+				System.out.println("///////////////////////////////////////////////");
 			}
 			// display the more accurate result
-			System.out.println("[CLIENT] SOLUTION :  offset = "+offsets[imin]+" / delay = "+delays[imin]);
+			System.out.println("[CLIENT] SOLUTION :  offset = "+offsets[imin]+"ms / delay = "+delays[imin]+"ms");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -71,6 +72,8 @@ class ClientSlave extends Thread {
 		// TODO
 		Timestamp t[] = new Timestamp[4];
 		dateRequest = new Date();
+		t[0] = new Timestamp(System.currentTimeMillis());
+		
 		Random r = new Random();
 		sleep(r.nextInt(91) + 10); //random delay between 10 ms and 100 ms
 
@@ -78,15 +81,21 @@ class ClientSlave extends Thread {
 		
 		BufferedReader d = new BufferedReader(new InputStreamReader(s.getInputStream()));
 		System.out.println("Answer from "+s.getRemoteSocketAddress()+":");
-		String dateString = d.readLine();
-		System.out.println(dateString);
+		String dateStringT2 = d.readLine();
+		t[1] = Timestamp.valueOf(dateStringT2);
+		String dateStringT3 = d.readLine();
+		t[2] = Timestamp.valueOf(dateStringT3);
+		/*
 		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 		String[] parts = dateString.split("\\s");
 		System.out.println(parts.toString());
 		Date dateResponse = format.parse(parts[1]);
 		double duration = dateResponse.getTime() - dateRequest.getTime();
 		System.out.println("duration = " + duration);
-		
+		*/
+		t[3] = new Timestamp(System.currentTimeMillis());
+		for (int i=0; i<4;i++)
+			System.out.println("t("+i+") = " + t[i]);
 		s.close();
 		return t;
 		

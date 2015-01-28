@@ -1,0 +1,49 @@
+<project>
+
+	<description>TK1 - Programmieraufgabe 5 - DIF EHOLIE SOBANIA
+	</description>
+
+	<property name="src.dir" value="src" />
+	<property name="bin.dir" value="bin" />
+	<property name="jar.dir" value="exe" />
+	<echo message="aaa" />
+	<target name="clean">
+	    <echo message="clean" />
+		<delete dir="bin" />
+		<delete dir="exe" />
+	</target>
+
+	<target name="compile" depends="clean">
+	    <echo message="compile" />
+		<mkdir dir="bin" />
+		<javac srcdir="src" destdir="bin" />
+	</target>
+
+	<target name="jar" depends="compile">
+	    <echo message="jars" />
+		<mkdir dir="${jar.dir}" />
+		<jar destfile="${jar.dir}/TimeClient.jar" basedir="${bin.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="ntptimeclient/TimeClient" />
+			</manifest>
+		</jar>
+
+		<jar destfile="${jar.dir}/TimeServer.jar" basedir="${bin.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="ntptimeserver/TimeServer" />
+			</manifest>
+		</jar>
+		<echo message="Jar creation completed" />
+	</target>
+
+
+	<target name="run" depends="jar">
+	    <echo message="run" />
+		<parallel>
+			<!-- start here one server and one client -->
+			<java jar="${jar.dir}/TimeServer.jar" fork="true" />
+			<java jar="${jar.dir}/TimeClient.jar" fork="true" />
+
+		</parallel>
+	</target>
+</project>

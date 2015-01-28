@@ -1,7 +1,7 @@
 package run;
 
-import ntp.timeclient.TimeClient;
-import ntp.timeserver.TimeServer;
+import ntptimeclient.TimeClient;
+import ntptimeserver.TimeServer;
 
 public class runMeasurements {
 

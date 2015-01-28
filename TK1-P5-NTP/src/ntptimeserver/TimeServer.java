@@ -1,4 +1,4 @@
-package ntp.timeserver;
+package ntptimeserver;
 
 import java.io.IOException;
 import java.io.PrintStream;
