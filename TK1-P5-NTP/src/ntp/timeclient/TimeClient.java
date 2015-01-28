@@ -25,6 +25,7 @@ class ClientSlave extends Thread {
 
 	int port;
 	static final int NMAX_MEASURES = 10;
+	static final int INTERTIME = 500;
 	
 	Date dateRequest;
 	
@@ -57,7 +58,7 @@ class ClientSlave extends Thread {
 					imin = i;
 				}
 				System.out.println("[CLIENT] Measure "+i+" : offset = "+offsets[i]+" / delay = "+delays[i]);
-				// wait
+				sleep(INTERTIME);
 			}
 			// display the more accurate result
 			System.out.println("[CLIENT] SOLUTION :  offset = "+offsets[imin]+" / delay = "+delays[imin]);
