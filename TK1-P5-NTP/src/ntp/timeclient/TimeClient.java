@@ -3,6 +3,7 @@ package ntp.timeclient;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -26,6 +27,14 @@ class Client extends Thread {
 		this.port = port;
 	}
 
+	public double measureOffset(Timestamp t1, Timestamp t2, Timestamp t3, Timestamp t4) {
+		return 0;
+	}
+	
+	public double measureDelay(Timestamp t1, Timestamp t2, Timestamp t3, Timestamp t4) {
+		return 0;
+	}
+	
 	public void run() {
 		System.out.println("run client");
 		try {
@@ -38,8 +47,11 @@ class Client extends Thread {
 			System.out.println("Answer from "+s.getRemoteSocketAddress()+":");
 			String dateString = d.readLine();
 			System.out.println(dateString);
-			SimpleDateFormat dateParser=new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-			Date dateResponse = dateParser.parse(dateString);
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+			//Date dateResponse = format.parse(dateString);
+			String[] parts = dateString.split("\\s");
+			System.out.println(parts.toString());
+			Date dateResponse = format.parse(parts[1]);
 			double duration = dateResponse.getTime() - dateRequest.getTime();
 			System.out.println("duration = " + duration);
 			
