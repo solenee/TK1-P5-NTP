@@ -34,30 +34,28 @@ public class TimeServer {
 class SlaveServer extends Thread {
 
 	Socket s;
-	int nMeasures;
-	
+
 	public SlaveServer(Socket s) {
 		this.s = s;
-	}
-
-	public void sendData() {
-		
 	}
 	
 	public void run() {
 		try {
+			// Time of reception
 			Timestamp t2 = new Timestamp(System.currentTimeMillis() + TimeServer.ARTIFICIAL_OFFSET);
 			System.out.println (s.getRemoteSocketAddress() + " asks time.");
+			
+			// Processing time
 			PrintStream p = new PrintStream(s.getOutputStream());
 			Random r = new Random();
 	    	sleep(r.nextInt(91) + 10); //random delay between 10 ms and 100 ms
+	    	
+	    	// Send the message
 	    	Timestamp t3 = new Timestamp(System.currentTimeMillis() + TimeServer.ARTIFICIAL_OFFSET);
 			p.println(t2);
 			p.println(t3);
-			nMeasures++;
-			if (nMeasures == 10) {
-				s.close();
-			}
+			
+			s.close();
 		} catch (Exception e) {
 			System.err.println(e);
 		}
